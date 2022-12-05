@@ -80,6 +80,10 @@ export default {
       },
       async createObject() {
          try {
+            if (!this.mapAddress[0]) {
+               alert('Поставьте точку на карту!')
+               return
+            }
             const resObject = await ObjectAPI.createObject(
                JSON.stringify({
                   name: this.name,

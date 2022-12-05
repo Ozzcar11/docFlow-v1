@@ -46,8 +46,9 @@
             :disabled="disabledNextBtn.comment || disabledNextBtn.engineer || disabledNextBtn.engineer1">Готово
          </base-button>
       </div>
-   <h4 class="create__headline">Логи</h4>
-   <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h4 class="create__headline">Логи</h4>
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -244,6 +245,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/engineer/')
             return
          }
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -252,7 +254,9 @@ export default {
             choice1: [+this.engineer.value],
             choice2: [+this.lawyer.value]
          }))
+         
          alert('Объект успешно завершён')
+         this.$router.push('/engineer/')
       },
       async addComment() {
          this.disabledNextBtn.comment = false

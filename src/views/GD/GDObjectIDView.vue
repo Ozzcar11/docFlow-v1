@@ -51,7 +51,8 @@
          <base-button @click="completeObject" style="margin-top: 20px">Готово</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -207,6 +208,7 @@ export default {
             choice2: false
          }))
          alert('Объект завершён')
+         this.$router.push('/fin-dir/')
       },
       async fetchObject() {
          const res = await ObjectAPI.requestObject(this.objectID)
@@ -256,6 +258,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/GD/')
             return
          }
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -264,6 +267,7 @@ export default {
             choice1: false,
             choice2: false
          }))
+         this.$router.push('/GD/')
          alert('Объект успешно завершён')
       },
       async addComment() {
@@ -287,8 +291,9 @@ export default {
             lvl: 'lvl99',
             choice1: false,
             choice2: false
-         })),
-            alert('Объект отменён')
+         }))
+         alert('Объект отменён')
+         this.$router.push('/fin-dir/')
       }
    },
 }

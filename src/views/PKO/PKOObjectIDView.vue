@@ -48,7 +48,9 @@
          <base-button v-if="cancelObj" @click="cancelObject" style="margin-top: 20px" theme="danger">Отказ</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -236,6 +238,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/PKO/')
             return
          }
 
@@ -246,6 +249,8 @@ export default {
                choice1: false,
                choice2: false
             }))
+            alert('Объект отклонён')
+            this.$router.push('/PKO/')
             return
          } else {
             await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -255,10 +260,8 @@ export default {
                choice2: false
             }))
          }
-
-
-
          alert('Объект успешно завершён')
+         this.$router.push('/PKO/')
       },
       async addComment() {
          this.disabledNextBtn.comment = false
@@ -283,6 +286,7 @@ export default {
             choice2: false
          }))
          alert('Объект отказан')
+         this.$router.push('/PKO/')
       }
    },
 }

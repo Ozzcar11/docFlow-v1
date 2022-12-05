@@ -39,8 +39,6 @@
             <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
             <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
          </div>
-         <h4 class="create__headline">Логи</h4>
-         <AppTable :tableRows="fileTable.tableRows" :tableHeadline="fileTable.tableHeadline" />
       </div>
       <div class="calc">
          <div class="calc__search">
@@ -59,9 +57,10 @@
             </template>
          </AppTable>
       </div>
-      <h4 class="create__headline">Логи</h4>
-      <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
    </div>
+   <h4 class="create__headline">Логи</h4>
+   <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+   <h6 v-else>Логи отсутствуют</h6>
 </template>
 
 <script>
@@ -210,12 +209,12 @@ export default {
          return res.value
       },
       addToTable() {
-         console.log(this.selectedItem);
          this.search.tableRows.push({
             id: this.selectedItem.id,
             name: this.selectedItem.value,
             value: this.selectedItem.quantity
          })
+         this.state = ''
       },
       async querySearchAsync() {
          const res = await ObjectAPI.searchObject({
@@ -266,6 +265,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/logistician/')
             return
          }
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -287,6 +287,7 @@ export default {
          }
          ObjectAPI.checkObject(this.objectID)
          alert('Объект успешно завершён')
+         this.$router.push('/logistician/')
       },
       async addComment() {
          this.disabledNextBtn = false

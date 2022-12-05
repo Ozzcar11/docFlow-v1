@@ -38,11 +38,12 @@
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
          <base-button @click="handleWarningObject" theme="danger" style="margin-top: 20px">
-         Ошибка</base-button>
+            Ошибка</base-button>
          <base-select v-if="handleWarning" v-model="area.value" :options="area.select">Выберите место</base-select>
       </div>
-   <h4 class="create__headline">Логи</h4>
-   <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h4 class="create__headline">Логи</h4>
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -222,6 +223,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/DS/')
             return
          }
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -231,6 +233,7 @@ export default {
             choice2: false
          }))
          alert('Объект успешно завершён')
+         this.$router.push('/DS/')
       },
       async addComment() {
          this.disabledNextBtn = false

@@ -36,15 +36,14 @@
             </div>
          </div>
          <div class="button__container">
-            <p class="button__container-desc" v-if="disabledNextBtn.comments || disabledNextBtn.check">Оставьте
-               комментрий и выберите все материалы для продолжения</p>
+            <p class="button__container-desc" v-if="disabledNextBtn.comments">Оставьте
+               комментрий для продолжения</p>
+            <p class="button__container-desc" v-if="(disabledNextBtn.check && disabled)">Выберите все материалы для продолжения</p>
             <base-button v-if="disabled" @click="changeObject" style="margin-top: 20px"
                :disabled="disabledNextBtn.comments || disabledNextBtn.check">Готово</base-button>
             <base-button v-else @click="changeObject" style="margin-top: 20px"
-               :disabled="disabledNextBtn.comments || disabledNextBtn.check">Готово</base-button>
+               :disabled="disabledNextBtn.comments">Готово</base-button>
          </div>
-         <h4 class="create__headline">Логи</h4>
-         <AppTable :tableRows="fileTable.tableRows" :tableHeadline="fileTable.tableHeadline" />
       </div>
       <div v-if="!disabled" class="calc">
          <AppTable v-if="search.tableRows.length" :tableHeadline="search.tableHeadline" :tableRows="search.tableRows"
@@ -54,9 +53,10 @@
             </template>
          </AppTable>
       </div>
-      <h4 class="create__headline">Логи</h4>
-      <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
    </div>
+      <h4 class="create__headline">Логи</h4>
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
 </template>
 
 <script>
@@ -209,6 +209,7 @@ export default {
       },
       async fetchMaterials() {
          const res = await ObjectAPI.getMaterialsObject(this.objectID)
+         console.log(res.data);
          for (let item in res.data) {
             this.search.tableRows.push({
                id: res.data[item].material_name_1S,
@@ -230,7 +231,7 @@ export default {
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
 
-         if (data.last_lvl == 'ИнженерПКО') this.disabled == true
+         if (data.last_lvl == 'Логист') this.disabled == true
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.objectID)
@@ -255,6 +256,7 @@ export default {
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
+            this.$router.push('/contractor/')
             return
          }
          if (this.search.tableRows.length) {
@@ -273,6 +275,7 @@ export default {
             }))
          }
          alert('Объект успешно завершён')
+         this.$router.push('/contractor/')
       },
       async addComment() {
          this.disabledNextBtn.comments = false

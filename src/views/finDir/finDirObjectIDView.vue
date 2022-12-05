@@ -37,7 +37,8 @@
       </div>
       <base-button @click="changeObject" style="margin-top: 20px">Сохранить</base-button>
       <h4 class="create__headline">Логи</h4>
-      <AppTable :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -212,6 +213,7 @@ export default {
             await FilesAPI.sendRegularFileObject(this.$route.params.id, createFormData(this.fileScheme))
             await FilesAPI.sendPriorityFileObject(this.$route.params.id, createFormData(this.fileDraft))
          } catch (e) {
+            this.$router.push('/fin-dir/')
             alert('Что-то пошло не так! Попробуйте позже')
             return
          }
