@@ -4,7 +4,7 @@
          <tr class="table__headline">
             <th v-for="item in tableHeadline" :key="item">{{ item.text }}</th>
          </tr>
-         <tr v-for="row in tableRows" :key="row.id">
+         <tr :class="{ danger: row.warning_construction }" v-for="row in tableRows" :key="row.id">
             <td v-for="item in tableHeadline" :key="item.key">
                <slot v-if="item.slot" :name="item.key" :item="row.id" />
                <template v-else>
@@ -35,8 +35,8 @@ export default {
       },
       offset: {
          type: String,
-         default: 'auto'
-      }
+         default: '800px'
+      },
    },
    mounted() {
       this.offsetFunc()
@@ -51,7 +51,7 @@ export default {
 
 <style lang="scss" scoped>
 .table-container {
-   overflow: auto;
+   overflow-y: auto;
 }
 
 .table {
@@ -71,6 +71,10 @@ export default {
       font-weight: 300;
       height: 40px;
       border-bottom: 0.5px solid $AltoSolid;
+
+      &.danger {
+         background-color: rgba(212, 1, 1, 0.186);
+      }
 
       td+td {
          padding-left: 30px;

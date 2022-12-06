@@ -59,6 +59,10 @@ export default {
                text: 'Стадия'
             },
             {
+               key: 'lastStage',
+               text: 'Предыдущая стадия'
+            },
+            {
                key: 'action',
                text: 'Действие',
                slot: true
@@ -75,9 +79,11 @@ export default {
          this.tableRows = []
          const res = await ObjectAPI.requestObjects()
          for (let item of res.data) {
+            console.log(item);
             this.tableRows.push({
                ...item,
-               stage: item.lvl.join('\n')
+               stage: item.lvl.join('\n'),
+               lastStage: item.last_lvl
             })
          }
       }

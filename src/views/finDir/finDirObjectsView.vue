@@ -59,6 +59,10 @@ export default {
                text: 'Стадия'
             },
             {
+               key: 'lastStage',
+               text: 'Предыдущая стадия'
+            },
+            {
                key: 'action',
                text: 'Действие',
                slot: true
@@ -76,7 +80,8 @@ export default {
          for (let item of res.data) {
             this.tableRows.push({
                ...item,
-               stage: item.lvl.join('\n')
+               stage: item.lvl.join('\n'),
+               lastStage: item.last_lvl
             })
          }
       }

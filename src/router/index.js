@@ -16,8 +16,6 @@ router.beforeEach((to, from, next) => {
     'accessToken'
   )
 
-   console.log(to)
-
   if (
     (isAuthorized &&
       to.meta.enableRoles?.includes(+store.getters.getUserRole)) ||

@@ -37,7 +37,8 @@
       </div>
       <base-button @click="changeObject" style="margin-top: 20px">Сохранить</base-button>
       <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
       <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
@@ -137,6 +138,7 @@ export default {
             ],
             tableRows: [],
          },
+         isFinDir: false,
       }
    },
    mounted() {
@@ -180,6 +182,7 @@ export default {
          this.mapAddress.push(data.coordinates.split(', '))
          this.represent = this.representsSelect.find(item => item.text == data.representative).value
 
+         if (data.lvl.find(item => item === 'Финансовый Директор')) this.isFinDir = true
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.$route.params.id)

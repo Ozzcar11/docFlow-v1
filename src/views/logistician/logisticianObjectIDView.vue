@@ -342,15 +342,6 @@ export default {
 .calc {
    margin: 40px 0px 0px 120px;
 
-   &__search {
-      &-self {
-         .el-input__wrapper {
-            width: 300px !important;
-            border-radius: 0px !important;
-         }
-      }
-   }
-
    &__button {
       margin-left: 20px;
    }
