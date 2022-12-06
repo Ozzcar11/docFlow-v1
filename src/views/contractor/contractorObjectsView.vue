@@ -1,7 +1,7 @@
 <template>
    <div v-if="!$route.meta.hideParent" class="objects">
       <base-headline>Объекты</base-headline>
-      <app-table v-if="tableRows.length" :tableHeadline="tableHeadline" :tableRows="tableRows">
+      <app-table danger v-if="tableRows.length" :tableHeadline="tableHeadline" :tableRows="tableRows">
          <template #action="{ item }">
             <router-link style="padding: 7px 20px" :to="'/contractor/objects/' + item" class="table-btn">
                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

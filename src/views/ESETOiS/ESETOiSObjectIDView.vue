@@ -38,7 +38,7 @@
          <base-select v-model="DS.value" :options="DS.data">
             Дежурный сайта</base-select>
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="(disabledNextBtn || DS.value === 'disabled')">Готово</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
@@ -221,7 +221,7 @@ export default {
          }
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
             action: 'up',
-            lvl: 'lvl15',
+            lvl: 'lvl16',
             choice1: [+this.DS.value],
             choice2: false
          }))

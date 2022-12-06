@@ -37,13 +37,19 @@
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
-         <base-button @click="handleWarningObject" theme="danger" style="margin-top: 20px">
+         <base-button @click="diaglogVisible = true" theme="danger" style="margin-top: 20px">
             Ошибка</base-button>
-         <base-select v-if="handleWarning" v-model="area.value" :options="area.select">Выберите место</base-select>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
       <h6 v-else>Логи отсутствуют</h6>
+      <el-dialog v-model="diaglogVisible" title="Выберите место" width="30%" center>
+         <template #footer>
+            <el-button type="primary" size="default" @click="handleWarningObject([17])">Махачкала</el-button>
+            <el-button type="primary" size="default" @click="handleWarningObject([14])">Районы</el-button>
+         </template>
+      </el-dialog>
    </div>
 </template>
 
@@ -103,19 +109,6 @@ export default {
             text: null,
             type: 'user'
          },
-         area: {
-            select: [
-               {
-                  value: '17',
-                  text: 'Махачкала'
-               },
-               {
-                  value: '14',
-                  text: 'Районы'
-               }
-            ],
-            value: 17
-         },
          representsSelect: [],
          mapAddress: [],
          name: null,
@@ -153,7 +146,7 @@ export default {
             ],
             tableRows: [],
          },
-         handleWarning: false
+         diaglogVisible: false,
       }
    },
    mounted() {
@@ -174,19 +167,14 @@ export default {
             })
          }
       },
-      async handleWarningObject() {
-         if (this.handleWarning) {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'warning',
-               lvl: 'lvl17',
-               choice1: [+this.area.value],
-               choice2: false
-            }))
-            return
-         }
-
-         this.handleWarning = true
-         alert('Выберите место и ещё раз нажмите кнопку "Ошибка"')
+      async handleWarningObject(value) {
+         this.diaglogVisible = false
+         await ObjectAPI.nextObject(this.objectID, JSON.stringify({
+            action: 'warning',
+            lvl: 'lvl17',
+            choice1: value,
+            choice2: false
+         }))
       },
       async fetchObject() {
          const res = await ObjectAPI.requestObject(this.objectID)
