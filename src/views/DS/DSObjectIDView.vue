@@ -175,6 +175,7 @@ export default {
             choice1: value,
             choice2: false
          }))
+         this.$router.push('/DS/')
       },
       async fetchObject() {
          const res = await ObjectAPI.requestObject(this.objectID)

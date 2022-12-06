@@ -35,13 +35,14 @@
          </div>
       </div>
       <div class="button__container">
-         <base-select v-model="DS.value" :options="DS.data">
+         <base-select v-if="lastLvl !== 'Дежурный сайта'" v-model="DS.value" :options="DS.data">
             Выберите инженера СЭТОиС</base-select>
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
       <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
@@ -123,6 +124,7 @@ export default {
          competition: null,
          fileScheme: null,
          objectID: this.$route.params.id,
+         lastLvl: null,
          fileTable: {
             tableHeadline: [
                {
@@ -192,6 +194,7 @@ export default {
          this.period = data.period
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
+         this.lastLvl = data.last_lvl
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.objectID)
