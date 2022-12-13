@@ -18,8 +18,8 @@
       <div style="margin-bottom: 30px">
          <slot />
       </div>
-      <div v-if="$store.getters.getUserRoute === 'admin'" class="aside__admin admin">
-         <!-- <div v-if="false" class="aside__admin admin"> -->
+      <!-- <div v-if="$store.getters.getUserRoute === 'admin'" class="aside__admin admin"> -->
+         <div v-if="false" class="aside__admin admin"> 
          <nav>
             <app-menu :menuList="adminMenuList" @clickAdmin="asideMenuHandler" pad />
          </nav>

@@ -3,7 +3,7 @@
       <base-headline>Редактировать объект</base-headline>
       <base-input v-model="name" disabled>Название объекта</base-input>
       <div class="create__input --flex --justify-between">
-         <base-input :class="{ margin40px: cancelObj }" type="file" multiple @change="fileScheme = $event.target.files">
+         <base-input type="file" multiple @change="fileScheme = $event.target.files">
             Необязательные файлы</base-input>
       </div>
       <AppTable v-if="fileTable.tableRows.length" :tableRows="fileTable.tableRows"
@@ -38,7 +38,7 @@
          <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn.comment">
             Принять</base-button>
-         <base-button v-if="cancelObj" @click="cancelObject" theme="danger" :disabled="disabledNextBtn.comment"
+         <base-button v-if="!cancelObj" @click="cancelObject" theme="danger" :disabled="disabledNextBtn.comment"
             style="margin-top: 20px">Отказ
          </base-button>
       </div>
@@ -233,13 +233,10 @@ export default {
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
          this.lastLVL = data.last_lvl
-
          if (this.lastLVL == 'Зам.ГД.развитию') {
             this.cancelObj = false
          } else if (this.lastLVL == 'Бухгалтер') {
             this.complete = true
-         } else {
-            this.disabledNextBtn.lawyer = false
          }
       },
       async fetchComments() {
@@ -300,11 +297,11 @@ export default {
                title: `Генеральный директор принял решение о необходимости проектирования ${this.name}`,
                message: `Объект ${this.name} принят`,
                notifType: 'success',
-               roles: [1]
+               roles: [20]
             }))
             NotificationAPI.createNotification(JSON.stringify({
                text: `Генеральный директор принял решение о необходимости проектирования ${this.name}`,
-               users: [1]
+               users: [27]
             }))
          }
          this.$router.push('/GD/')
@@ -340,7 +337,7 @@ export default {
          }))
          NotificationAPI.createNotification(JSON.stringify({
             text: `Генеральный директор отменил ${this.name} объект`,
-            users: [1, 27]
+            users: [2, 27]
          }))
          alert('Объект отменён')
          this.$router.push('/GD/')

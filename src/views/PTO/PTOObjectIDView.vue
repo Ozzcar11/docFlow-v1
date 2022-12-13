@@ -55,7 +55,10 @@ import BaseFile from '@/components/Base/BaseFile.vue'
 
 import { ObjectAPI } from '@/api/object'
 import { FilesAPI } from "@/api/files"
+import { NotificationAPI } from "@/api/notification"
 import AppTable from '@/components/App/AppTable.vue'
+
+import webSocket from '@/api/notificationWS'
 
 import createFormData from '@/utils/createFormData'
 
@@ -151,6 +154,7 @@ export default {
             ],
             tableRows: [],
          },
+         socket: null,
       }
    },
    mounted() {
@@ -158,6 +162,8 @@ export default {
       this.fetchComments()
       this.fetchFiles()
       this.fetchLogs()
+
+      this.socket = webSocket('notification')
    },
    methods: {
       async fetchLogs() {
@@ -219,11 +225,11 @@ export default {
             title: `ПТО завершил строительство ${this.name}`,
             message: `Объект ${this.name} завершил строительство`,
             notifType: 'success',
-            roles: [17, 20, 4]
+            roles: [18, 20, 4]
          }))
          NotificationAPI.createNotification(JSON.stringify({
             text: `ПТО завершил строительство ${this.name}`,
-            users: [17, 27, 4]
+            users: [21, 27, 5]
          }))
          alert('Объект успешно принят')
          this.$router.push('/PTO/')

@@ -223,7 +223,7 @@ export default {
          }))
          NotificationAPI.createNotification(JSON.stringify({
             text: `Строительство ${this.name} завершено`,
-            users: [2]
+            users: [3]
          }))
          alert('Объект успешно принят')
          this.$router.push('/accounting/')
