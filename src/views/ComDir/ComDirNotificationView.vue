@@ -38,11 +38,11 @@ export default {
                key: 'text',
                text: 'Комментарий'
             },
-            {
-               key: 'action',
-               text: 'Действие',
-               slot: true
-            }
+            // {
+            //    key: 'action',
+            //    text: 'Действие',
+            //    slot: true
+            // }
          ],
          tableRows: []
       }

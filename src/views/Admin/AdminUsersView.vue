@@ -1,5 +1,5 @@
 <template>
-   <div v-if="!$route.meta.hiddenView" class="users">
+   <div v-if="!hideParent" class="users">
       <base-header>Пользователи</base-header>
       <app-table :tableHeadline="tableHeadline" :tableRows="tableRows">
          <template #action="{ item }">
@@ -82,13 +82,15 @@ export default {
    },
    methods: {
       async fetchUsers() {
+         this.tableRows = []
          const res = await UsersAPI.requestUsers()
          for (let user of res.data) {
-            this.tableRows.push({
-               id: user.id,
-               login: stringToPhone(user.phone),
-               role: user.roles
-            })
+            if (user.FIO !== null)
+               this.tableRows.push({
+                  id: user.id,
+                  login: stringToPhone(user.phone),
+                  role: user.roles
+               })
          }
       },
       async deleteRow(value) {
@@ -98,7 +100,19 @@ export default {
             this.fetchUsers()
          } else return
       }
-   }
+   },
+   computed: {
+      hideParent() {
+         return this.$route.meta.hideParent
+      }
+   },
+   watch: {
+      hideParent(val, oldVal) {
+         if (val === undefined && oldVal === true) {
+            this.fetchUsers()
+         }
+      }
+   },
 }
 </script>
 

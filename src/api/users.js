@@ -18,5 +18,11 @@ export const UsersAPI = {
   },
   profileUser(profile) {
     return DefaultAPIInstance.get(`/LIST/?who=${profile}`)
+  },
+  listRoles() {
+   return DefaultAPIInstance.get(`/list_roles`)
+  },
+  newPass(id, body){
+   return DefaultAPIInstance.put(`/new_password/${id}/`, body)
   }
 }

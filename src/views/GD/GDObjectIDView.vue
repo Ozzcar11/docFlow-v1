@@ -3,8 +3,6 @@
       <base-headline>Редактировать объект</base-headline>
       <base-input v-model="name" disabled>Название объекта</base-input>
       <div class="create__input --flex --justify-between">
-         <base-input v-if="cancelObj" type="file" @change="fileDraft = $event.target.files">Обязательный файл *
-         </base-input>
          <base-input :class="{ margin40px: cancelObj }" type="file" multiple @change="fileScheme = $event.target.files">
             Необязательные файлы</base-input>
       </div>

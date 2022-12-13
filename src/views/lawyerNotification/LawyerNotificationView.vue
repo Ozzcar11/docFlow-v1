@@ -42,11 +42,11 @@ export default {
                key: 'comment',
                text: 'Комментарий'
             },
-            {
-               key: 'action',
-               text: 'Действие',
-               slot: true
-            }
+            // {
+            //    key: 'action',
+            //    text: 'Действие',
+            //    slot: true
+            // }
          ],
          tableRows: []
       }
@@ -58,12 +58,11 @@ export default {
       async fetchObjects() {
          this.tableRows = []
          const res = await NotificationAPI.getNotifications(this.$store.getters.getUserBackRole)
-         console.log(res.data);
-         // for (let item of res.data) {
-         //    this.tableRows.push({
-               
-         //    })
-         // }
+         for (let item of res.data) {
+            this.tableRows.push({
+               ...item
+            })
+         }
       }
    },
 }

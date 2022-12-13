@@ -13,13 +13,13 @@ export const admin = [
           {
             path: 'add',
             name: 'addUser',
-            meta: { hiddenView: true, adminPanel: true, enableRoles: [0] },
+            meta: { hideParent: true, adminPanel: true, enableRoles: [0] },
             component: () => import('@/views/Admin/AdminAddView.vue')
           },
           {
             path: ':id',
             name: 'adminUser',
-            meta: { hiddenView: true, adminPanel: true, enableRoles: [0] },
+            meta: { hideParent: true, adminPanel: true, enableRoles: [0] },
             component: () => import('@/views/Admin/AdminUserView.vue')
           }
         ]
