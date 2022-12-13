@@ -36,10 +36,11 @@
       </div>
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
       <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
@@ -201,7 +202,7 @@ export default {
             choice1: false,
             choice2: false
          }))
-         alert('Объект успешно завершён')
+         alert('Объект успешно принят')
          this.$router.push('/surveyor/')
       },
       async addComment() {

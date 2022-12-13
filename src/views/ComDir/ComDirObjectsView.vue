@@ -1,9 +1,9 @@
 <template>
-   <div v-if="!hideParent" class="objects">
+   <div v-if="!$route.meta.hideParent" class="objects">
       <base-headline>Объекты</base-headline>
       <app-table v-if="tableRows.length" :tableHeadline="tableHeadline" :tableRows="tableRows">
          <template #action="{ item }">
-            <router-link style="padding: 7px 20px" :to="'/fin-dir/objects/' + item" class="table-btn">
+            <router-link style="padding: 7px 20px" :to="'/ComDir/objects/' + item" class="table-btn">
                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clip-path="url(#clip0_3_102)">
                      <path
@@ -23,7 +23,6 @@
          </template>
       </app-table>
       <h4 class="" v-else>Объектов на вашем уровне нет</h4>
-      <base-button to="/fin-dir/objects/create" style="margin-top: 30px">Создать объект</base-button>
    </div>
    <router-view />
 </template>
@@ -33,8 +32,8 @@ import BaseHeadline from '@/components/Base/BaseHeadline.vue'
 import BaseButton from '@/components/Base/BaseButton.vue'
 import AppTable from '@/components/App/AppTable.vue'
 import AppFilterbyDate from '@/components/App/AppFilterbyDate.vue'
-
 import { ObjectAPI } from '@/api/object'
+
 
 export default {
    name: 'ORRObjectView',
@@ -86,20 +85,8 @@ export default {
                lastStage: item.last_lvl
             })
          }
-      },
-   },
-   computed: {
-      hideParent() {
-         return this.$route.meta.hideParent
       }
    },
-   watch: {
-      hideParent(val, oldVal) {
-         if (val === undefined && oldVal === true) {
-            this.fetchObjects()
-         }
-      }
-   }
 }
 </script>
 

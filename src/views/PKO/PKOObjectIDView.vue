@@ -44,8 +44,8 @@
          <br>
          <p class="button__container-desc" v-if="!cancelObj">Выберите инженера</p>
          <base-button @click="changeObject" style="margin-top: 20px"
-            :disabled="(disabledNextBtn.comment || disabledNextBtn.engineer || fileDraft == null)">Готово</base-button>
-         <base-button v-if="cancelObj" @click="cancelObject" style="margin-top: 20px" theme="danger">Отказ</base-button>
+            :disabled="(disabledNextBtn.comment || disabledNextBtn.engineer || fileDraft == null)">Принять</base-button>
+         <base-button v-if="cancelObj" :disabled="disabledNextBtn.comment" @click="cancelObject" style="margin-top: 20px" theme="danger">Отказ</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -260,7 +260,7 @@ export default {
                choice2: false
             }))
          }
-         alert('Объект успешно завершён')
+         alert('Объект успешно принят')
          this.$router.push('/PKO/')
       },
       async addComment() {

@@ -44,6 +44,12 @@ export const finDir = [
             component: () => import('@/views/finDir/finDirRepresentIDView.vue')
           }
         ]
+      },
+      {
+        path: 'notification',
+        name: 'finDirNotif',
+        meta: { enableRoles: [0, 1] },
+        component: () => import('@/views/finDir/finDirNotificationView.vue')
       }
     ]
   }

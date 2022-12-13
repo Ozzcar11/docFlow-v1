@@ -16,6 +16,9 @@ import { contractor } from './contractor'
 import { GSETOiS } from './GSETOiS'
 import { ESETOiS } from './ESETOiS'
 import { DS } from './DS'
+import { ComDir } from './ComDir'
+import { ORR } from './ORR'
+import { lawyerNotification } from './lawyerNotification'
 
 export const roles = [
   ...admin,
@@ -35,5 +38,8 @@ export const roles = [
   ...contractor,
   ...GSETOiS,
   ...ESETOiS,
-  ...DS
+  ...DS,
+  ...ComDir,
+  ...ORR,
+  ...lawyerNotification
 ]

@@ -8,7 +8,8 @@ export const AuthModule = {
       credentials: {
         accessToken: localStorage.getItem('accessToken') || null,
         refreshToken: localStorage.getItem('refreshToken') || null,
-        userRole: localStorage.getItem('userRole') || null
+        userRole: localStorage.getItem('userRole') || null,
+        userBackRole: localStorage.getItem('userBackRole') || null
       },
       roles: [
         'admin',
@@ -29,7 +30,10 @@ export const AuthModule = {
         'ESETOiS',
         'DS',
         'PTO',
-        'accounting'
+        'accounting',
+        'ORR',
+        'ComDir',
+        'LawyerNotification'
       ]
     }
   },
@@ -39,6 +43,12 @@ export const AuthModule = {
     },
     getUserRole: (state) => {
       return state.credentials.userRole
+    },
+    getUserBackRole: (state) => {
+      return state.credentials.userBackRole
+    },
+    getToken: (state) => {
+      return state.credentials.accessToken
     }
   },
 
@@ -54,6 +64,10 @@ export const AuthModule = {
     setRole(state, role) {
       state.credentials.userRole = role
       localStorage.setItem('userRole', role)
+    },
+    setBackRole(state, role) {
+      state.credentials.userBackRole = role
+      localStorage.setItem('userBackRole', role)
     },
     refreshToken({ commit }, token) {
       commit('setAccessToken', token)
@@ -71,6 +85,10 @@ export const AuthModule = {
     deleteUserRole(state) {
       state.credentials.userRole = null
       localStorage.removeItem('userRole')
+    },
+    deleteUserBackRole(state) {
+      state.credentials.userBackRole = null
+      localStorage.removeItem('userBackRole')
     }
   },
   actions: {
@@ -80,6 +98,7 @@ export const AuthModule = {
       commit('setAccessToken', res.data.access)
       commit('setRefreshToken', res.data.refresh)
       commit('setRole', res.data.roles)
+      commit('setBackRole', res.data.id_user)
     },
     async onLogout({ commit }) {
       commit('setAccessToken')
@@ -87,6 +106,7 @@ export const AuthModule = {
       commit('deleteAccessToken')
       commit('deleteRefreshToken')
       commit('deleteUserRole')
+      commit('deleteUserBackRole')
       localStorage.removeItem('TTEtoken')
       delete DefaultAPIInstance.defaults.headers['authorization']
     }

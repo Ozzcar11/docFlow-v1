@@ -28,6 +28,11 @@ export const roles = [
         name: 'Представители',
         icon: 'representive.svg',
         routerPath: '/fin-dir/represent'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/fin-dir/notification'
       }
     ]
   },
@@ -39,6 +44,11 @@ export const roles = [
         name: 'Объекты',
         icon: 'objects.svg',
         routerPath: '/GD/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/GD/notification'
       }
     ]
   },
@@ -71,6 +81,11 @@ export const roles = [
         name: 'Объекты',
         icon: 'objects.svg',
         routerPath: '/PKO/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/PKO/notification'
       }
     ]
   },
@@ -174,12 +189,18 @@ export const roles = [
   },
   {
     name: 'ГД',
-    routerPath: '/GD-2/',
+    routerPath: '/GD/',
     asideMenu: [
       {
         name: 'Объекты',
         icon: 'objects.svg',
         routerPath: '/GD/objects'
+      },
+      ,
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/GD/notification'
       }
     ]
   },
@@ -333,6 +354,11 @@ export const roles = [
         name: 'Объекты',
         icon: 'objects.svg',
         routerPath: '/accounting/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/accounting/notification'
       }
     ]
   },
@@ -344,6 +370,54 @@ export const roles = [
         name: 'Объекты',
         icon: 'objects.svg',
         routerPath: '/GD/objects'
+      }
+    ]
+  },
+  {
+    name: 'ОРР',
+    routerPath: '/ORR/',
+    asideMenu: [
+      {
+        name: 'Объекты',
+        icon: 'objects.svg',
+        routerPath: '/ORR/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/ORR/notification'
+      }
+    ]
+  },
+  {
+    name: 'Ком.Дир',
+    routerPath: '/ComDir/',
+    asideMenu: [
+      {
+        name: 'Объекты',
+        icon: 'objects.svg',
+        routerPath: '/ComDir/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/ComDir/notification'
+      }
+    ]
+  },
+  {
+    name: 'Юрист(Уведомления)',
+    routerPath: '/LawyerNotification/',
+    asideMenu: [
+      {
+        name: 'Объекты',
+        icon: 'objects.svg',
+        routerPath: '/LawyerNotification/objects'
+      },
+      {
+        name: 'Уведомления',
+        icon: 'notif.svg',
+        routerPath: '/LawyerNotification/notification'
       }
     ]
   }

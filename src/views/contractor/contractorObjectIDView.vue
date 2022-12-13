@@ -38,11 +38,12 @@
          <div class="button__container">
             <p class="button__container-desc" v-if="disabledNextBtn.comments">Оставьте
                комментрий для продолжения</p>
-            <p class="button__container-desc" v-if="(disabledNextBtn.check && disabled)">Выберите все материалы для продолжения</p>
+            <p class="button__container-desc" v-if="(disabledNextBtn.check && disabled)">Выберите все материалы для
+               продолжения</p>
             <base-button v-if="disabled" @click="changeObject" style="margin-top: 20px"
-               :disabled="disabledNextBtn.comments || disabledNextBtn.check">Готово</base-button>
+               :disabled="disabledNextBtn.comments || disabledNextBtn.check">Принять</base-button>
             <base-button v-else @click="changeObject" style="margin-top: 20px"
-               :disabled="disabledNextBtn.comments">Готово</base-button>
+               :disabled="disabledNextBtn.comments">Принять</base-button>
          </div>
       </div>
       <div v-if="!disabled" class="calc">
@@ -54,9 +55,10 @@
          </AppTable>
       </div>
    </div>
-      <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
-      <h6 v-else>Логи отсутствуют</h6>
+   <h4 class="create__headline">Логи</h4>
+   <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+      :tableHeadline="logsTable.tableHeadline" />
+   <h6 v-else>Логи отсутствуют</h6>
 </template>
 
 <script>
@@ -274,7 +276,7 @@ export default {
                choice2: false
             }))
          }
-         alert('Объект успешно завершён')
+         alert('Объект успешно принят')
          this.$router.push('/contractor/')
       },
       async addComment() {

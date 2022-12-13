@@ -19,6 +19,13 @@ export const accounting = [
               import('@/views/accounting/accountingObjectIDView.vue')
           }
         ]
+      },
+      {
+        path: 'notification',
+        name: 'accountingNotif',
+        meta: { enableRoles: [0, 18] },
+        component: () =>
+          import('@/views/accounting/accountingNotificationView.vue')
       }
     ]
   }

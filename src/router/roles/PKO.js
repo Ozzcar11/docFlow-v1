@@ -18,6 +18,12 @@ export const PKO = [
             component: () => import('@/views/PKO/PKOObjectIDView.vue')
           }
         ]
+      },
+      {
+        path: 'notification',
+        name: 'PKONotif',
+        meta: { enableRoles: [0, 4] },
+        component: () => import('@/views/PKO/PKONotificationView.vue')
       }
     ]
   }

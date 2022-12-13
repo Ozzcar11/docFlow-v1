@@ -79,7 +79,6 @@ export default {
          this.tableRows = []
          const res = await ObjectAPI.requestObjects()
          for (let item of res.data) {
-            console.log(item);
             this.tableRows.push({
                ...item,
                stage: item.lvl.join('\n'),
@@ -88,18 +87,6 @@ export default {
          }
       }
    },
-   computed: {
-      hideParent() {
-         return this.$route.meta.hideParent
-      }
-   },
-   watch: {
-      hideParent(val, oldVal) {
-         if (val === undefined && oldVal === true) {
-            this.fetchObjects()
-         }
-      }
-   }
 }
 </script>
 

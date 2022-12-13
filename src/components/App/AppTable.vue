@@ -4,7 +4,8 @@
          <tr class="table__headline">
             <th v-for="item in tableHeadline" :key="item">{{ item.text }}</th>
          </tr>
-         <tr :class="{ danger: row.warning_construction && danger || row.warning_nodes && danger }" v-for="row in tableRows" :key="row.id">
+         <tr :class="{ danger: row.warning_construction && danger || row.warning_nodes && danger }"
+            v-for="row in tableRows" :key="row.id">
             <td v-for="item in tableHeadline" :key="item.key">
                <slot v-if="item.slot" :name="item.key" :item="row.id" />
                <template v-else>
@@ -56,6 +57,7 @@ export default {
 <style lang="scss" scoped>
 .table-container {
    overflow-y: auto;
+   overflow-x: hidden;
 }
 
 .table {

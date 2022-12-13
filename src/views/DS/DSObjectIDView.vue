@@ -36,8 +36,8 @@
       </div>
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
-         <base-button @click="diaglogVisible = true" theme="danger" style="margin-top: 20px">
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
+         <base-button @click="diaglogVisible = true" :disabled="disabledNextBtn" theme="danger" style="margin-top: 20px">
             Ошибка</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
@@ -221,7 +221,7 @@ export default {
             choice1: false,
             choice2: false
          }))
-         alert('Объект успешно завершён')
+         alert('Объект успешно принят')
          this.$router.push('/DS/')
       },
       async addComment() {

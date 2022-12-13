@@ -43,11 +43,12 @@
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения и выберите
             агента или юриста</p>
          <base-button @click="changeObject" style="margin-top: 20px"
-            :disabled="disabledNextBtn.comment || disabledNextBtn.engineer || disabledNextBtn.engineer1">Готово
+            :disabled="disabledNextBtn.comment || disabledNextBtn.engineer || disabledNextBtn.engineer1">Принять
          </base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
       <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
@@ -254,8 +255,8 @@ export default {
             choice1: [+this.engineer.value],
             choice2: [+this.lawyer.value]
          }))
-         
-         alert('Объект успешно завершён')
+
+         alert('Объект успешно принят')
          this.$router.push('/engineer/')
       },
       async addComment() {

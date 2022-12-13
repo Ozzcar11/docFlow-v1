@@ -36,11 +36,12 @@
       </div>
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Готово</base-button>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
-         <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows" :tableHeadline="logsTable.tableHeadline" />
-         <h6 v-else>Логи отсутствуют</h6>
+      <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
+         :tableHeadline="logsTable.tableHeadline" />
+      <h6 v-else>Логи отсутствуют</h6>
    </div>
 </template>
 
@@ -214,7 +215,17 @@ export default {
             choice1: false,
             choice2: false
          }))
-         alert('Объект успешно завершён')
+         this.socket.send(JSON.stringify({
+            title: `Строительство ${this.name} завершено`,
+            message: `Объект ${this.name} завершил строительство`,
+            notifType: 'success',
+            roles: [2]
+         }))
+         NotificationAPI.createNotification(JSON.stringify({
+            text: `Строительство ${this.name} завершено`,
+            users: [2]
+         }))
+         alert('Объект успешно принят')
          this.$router.push('/accounting/')
       },
       async addComment() {

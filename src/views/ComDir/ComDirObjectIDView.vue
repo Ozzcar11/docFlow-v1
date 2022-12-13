@@ -1,11 +1,7 @@
 <template>
    <div class="create">
-      <base-headline>Редактировать объект</base-headline>
+      <base-headline>Просмотреть объект</base-headline>
       <base-input v-model="name" disabled>Название объекта</base-input>
-      <div class="create__input --flex --justify-between">
-         <base-input type="file" multiple @change="fileScheme = $event.target.files">
-            Необязательные файлы</base-input>
-      </div>
       <AppTable v-if="fileTable.tableRows.length" :tableRows="fileTable.tableRows"
          :tableHeadline="fileTable.tableHeadline">
          <template #action="{ item }">
@@ -34,16 +30,6 @@
             <base-input v-model="competition" disabled>Конкуренция</base-input>
          </div>
       </div>
-      <div class="button__container">
-         <base-select v-if="cancel" v-model="contractor.value" @change="disableSelectHandler()"
-            :options="contractor.data">
-            Подрядчик</base-select>
-         <base-select v-if="lastLVL == 'Тех.надзор'" v-model="engineer.value" @change="disableSelectHandler()"
-            :options="engineer.data">
-            Инженеры</base-select>
-         <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
-      </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
          :tableHeadline="logsTable.tableHeadline" />
@@ -61,10 +47,7 @@ import BaseFile from '@/components/Base/BaseFile.vue'
 
 import { ObjectAPI } from '@/api/object'
 import { FilesAPI } from "@/api/files"
-import { UsersAPI } from "@/api/users"
 import AppTable from '@/components/App/AppTable.vue'
-
-import createFormData from '@/utils/createFormData'
 
 export default {
    components: {
@@ -108,6 +91,19 @@ export default {
             text: null,
             type: 'user'
          },
+         area: {
+            select: [
+               {
+                  value: '17',
+                  text: 'Махачкала'
+               },
+               {
+                  value: '14',
+                  text: 'Районы'
+               }
+            ],
+            value: 17
+         },
          representsSelect: [],
          mapAddress: [],
          name: null,
@@ -118,14 +114,6 @@ export default {
          competition: null,
          fileScheme: null,
          objectID: this.$route.params.id,
-         engineer: {
-            value: 'disabled',
-            data: [{
-               value: 'disabled',
-               text: 'Выберите инженера',
-               disabled: true,
-            }],
-         },
          fileTable: {
             tableHeadline: [
                {
@@ -153,24 +141,12 @@ export default {
             ],
             tableRows: [],
          },
-         contractor: {
-            value: 'disabled',
-            data: [{
-               value: 'disabled',
-               text: 'Выберите агента/подрядчика',
-               disabled: true,
-            }],
-         },
-         lastLVL: null,
-         cancel: false
       }
    },
    mounted() {
       this.fetchObject()
       this.fetchComments()
       this.fetchFiles()
-      this.fetchСontractor()
-      this.fetchEngineer()
       this.fetchLogs()
    },
    methods: {
@@ -185,21 +161,10 @@ export default {
             })
          }
       },
-      async fetchEngineer() {
-         const res = await UsersAPI.profileUser('Инженер СТЭОиС')
-         const data = res.data
-         for (let item of data) {
-            this.engineer.data.push({
-               value: item.id,
-               text: item.FIO,
-            })
-         }
-      },
       async fetchObject() {
          const res = await ObjectAPI.requestObject(this.objectID)
          const data = res.data
          this.name = data.name
-         this.lastLVL = data.last_lvl
          this.competition = data.competition
          this.potential = data.potential
          this.represent = data.representative
@@ -207,15 +172,6 @@ export default {
          this.period = data.period
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
-      },
-      async fetchСontractor() {
-         const res = await UsersAPI.profileUser('Агент/Подрядчик')
-         const data = res.data
-         for (let item of data)
-            this.contractor.data.push({
-               value: item.id,
-               text: item.FIO
-            })
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.objectID)
@@ -231,75 +187,7 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
          this.fileTable.tableRows = [...resR.data]
-
-         if (resP.data.length === 2 && this.lastLVL == 'ГД') this.cancel = true
-      },
-      async changeObject() {
-         try {
-            if (this.fileDraft) {
-               await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileDraft))
-            }
-         } catch (e) {
-            alert('Что-то пошло не так! Попробуйте позже')
-            this.$router.push('/viceGD-s1/')
-            return
-         }
-         if (this.lastLVL == 'Дежурный сайта') {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'up',
-               lvl: 'lvl18',
-               choice1: false,
-               choice2: false
-            }))
-            alert('Объект успешно принят')
-            this.$router.push('/viceGD-s1/')
-            return
-         }
-
-         if (this.lastLVL == 'НачальникПКО') {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'up',
-               lvl: 'lvl7',
-               choice1: false,
-               choice2: false
-            }))
-            alert('Объект успешно принят')
-            this.$router.push('/viceGD-s1/')
-            return
-         }
-         if (this.cancel && this.lastLVL == 'Тех.надзор') {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'up',
-               lvl: 'lvl15',
-               choice1: [+this.engineer.value],
-               choice2: false
-            }))
-            alert('Объект успешно принят')
-            this.$router.push('/viceGD-s1/')
-            return
-         } else if (this.cancel) {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'up',
-               lvl: 'lvl9',
-               choice1: this.contractor.value,
-               choice2: false
-            }))
-            alert('Объект успешно принят')
-            this.$router.push('/viceGD-s1/')
-            return
-         } else {
-            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
-               action: 'up',
-               lvl: 'lvl2',
-               choice1: false,
-               choice2: false
-            }))
-            alert('Объект успешно принят')
-            this.$router.push('/viceGD-s1/')
-            return
-         }
       },
       async addComment() {
          this.disabledNextBtn = false
