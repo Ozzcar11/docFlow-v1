@@ -78,9 +78,13 @@ export default {
       //    }
       // },
       async buttonHandler() {
-         await this.onLogin(this.generateRequest(this.passInput))
-         if (localStorage.getItem('userRole')) {
-            this.$router.push(`/${this.$store.getters.getUserRoute}`)
+         try {
+            await this.onLogin(this.generateRequest(this.passInput))
+            if (localStorage.getItem('userRole')) {
+               this.$router.push(`/${this.$store.getters.getUserRoute}`)
+            }
+         } catch (e) {
+            alert('Проверьте правильность введённых данных')
          }
       },
 

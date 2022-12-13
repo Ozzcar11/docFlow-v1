@@ -93,12 +93,16 @@ export const AuthModule = {
   },
   actions: {
     async onLogin({ commit }, body) {
-      const res = await AuthAPI.getToken(body)
-      localStorage.setItem('TTEtoken', jwt_decode(res.data.access).exp)
-      commit('setAccessToken', res.data.access)
-      commit('setRefreshToken', res.data.refresh)
-      commit('setRole', res.data.roles)
-      commit('setBackRole', res.data.id_user)
+      try {
+        const res = await AuthAPI.getToken(body)
+        localStorage.setItem('TTEtoken', jwt_decode(res.data.access).exp)
+        commit('setAccessToken', res.data.access)
+        commit('setRefreshToken', res.data.refresh)
+        commit('setRole', res.data.roles)
+        commit('setBackRole', res.data.id_user)
+      } catch (e) {
+        throw e
+      }
     },
     async onLogout({ commit }) {
       commit('setAccessToken')
