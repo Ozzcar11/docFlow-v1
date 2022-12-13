@@ -57,6 +57,9 @@ import { ObjectAPI } from '@/api/object'
 import { FilesAPI } from "@/api/files"
 import AppTable from '@/components/App/AppTable.vue'
 
+import { NotificationAPI } from "@/api/notification"
+import webSocket from '@/api/notificationWS'
+
 import createFormData from '@/utils/createFormData'
 
 export default {
@@ -151,6 +154,7 @@ export default {
             ],
             tableRows: [],
          },
+         socket: null
       }
    },
    mounted() {
@@ -158,6 +162,8 @@ export default {
       this.fetchComments()
       this.fetchFiles()
       this.fetchLogs()
+
+      this.socket = webSocket('notification')
    },
    methods: {
       async fetchLogs() {

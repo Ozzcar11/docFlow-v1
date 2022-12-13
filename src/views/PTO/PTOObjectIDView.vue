@@ -55,9 +55,9 @@ import BaseFile from '@/components/Base/BaseFile.vue'
 
 import { ObjectAPI } from '@/api/object'
 import { FilesAPI } from "@/api/files"
-import { NotificationAPI } from "@/api/notification"
 import AppTable from '@/components/App/AppTable.vue'
 
+import { NotificationAPI } from "@/api/notification"
 import webSocket from '@/api/notificationWS'
 
 import createFormData from '@/utils/createFormData'
