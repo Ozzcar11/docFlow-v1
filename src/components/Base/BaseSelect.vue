@@ -3,9 +3,9 @@
       <slot />
    </div>
 
-   <select class="select" @change="onChange($event.target.value)">
-      <option v-for="{ value, text, disabled } of options" :key="value" :value="value" :selected="isSelected(value)"
-         :disabled="disabled">
+   <select :disabled="disabled" class="select" @change="onChange($event.target.value)">
+      <option v-for="{ value, text, disabledOptions } of options" :key="value" :value="value" :selected="isSelected(value)"
+         :disabled="disabledOptions">
          {{ text }}
       </option>
    </select>
@@ -22,6 +22,10 @@ export default {
       modelValue: {
          type: [Number, String],
          default: ''
+      },
+      disabled: {
+         type: Boolean,
+         default: false
       }
    },
    methods: {

@@ -34,9 +34,13 @@
             <base-input v-model="competition" disabled>Конкуренция</base-input>
          </div>
       </div>
+      <base-select v-if="this.lastLvl === 'Тех.надзор'" v-model="DS.value" :options="DS.data">
+         Выберите инженера СЭТОиС</base-select>
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
+         <br>
+         <p class="button__container-desc" v-if="DS.value === 'disabled' && this.lastLvl === 'Тех.надзор'">Выберите инженера СЭТОиС</p>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="(disabledNextBtn || DS.value === 'disabled' && this.lastLvl === 'Тех.надзор')">Принять</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -55,6 +59,7 @@ import BaseFile from '@/components/Base/BaseFile.vue'
 
 import { ObjectAPI } from '@/api/object'
 import { FilesAPI } from "@/api/files"
+import { UsersAPI } from "@/api/users"
 import AppTable from '@/components/App/AppTable.vue'
 
 import createFormData from '@/utils/createFormData'
@@ -101,6 +106,16 @@ export default {
             text: null,
             type: 'user'
          },
+         DS: {
+            value: "disabled",
+            data: [
+               {
+                  value: 'disabled',
+                  text: 'Выберите инженера СЭТОиС',
+                  disabled: true
+               }
+            ]
+         },
          representsSelect: [],
          mapAddress: [],
          name: null,
@@ -138,6 +153,7 @@ export default {
             ],
             tableRows: [],
          },
+         lastLvl: '',
       }
    },
    mounted() {
@@ -145,6 +161,7 @@ export default {
       this.fetchComments()
       this.fetchFiles()
       this.fetchLogs()
+      this.fetchDS()
    },
    methods: {
       async fetchLogs() {
@@ -169,6 +186,19 @@ export default {
          this.period = data.period
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
+         this.lastLvl = data.last_lvl
+         console.log(this.lastLvl);
+      },
+      async fetchDS() {
+         const res = await UsersAPI.profileUser('Инженер СТЭОиС')
+         const data = res.data
+         console.log(data);
+         for (let item of data) {
+            this.DS.data.push({
+               value: item.id,
+               text: item.FIO,
+            })
+         }
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.objectID)
@@ -184,7 +214,8 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {
@@ -196,6 +227,14 @@ export default {
             this.$router.push('/viceGD-exp/')
             return
          }
+         if (this.lastLvl === 'Тех.надзор') {
+            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
+               action: 'up',
+               lvl: 'lvl15',
+               choice1: [+this.DS.value],
+               choice2: false
+            }))
+         } else
          await ObjectAPI.nextObject(this.objectID, JSON.stringify({
             action: 'up',
             lvl: 'lvl13',

@@ -38,6 +38,8 @@
          <base-select v-model="DS.value" :options="DS.data">
             Дежурный сайта</base-select>
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
+         <br>
+         <p class="button__container-desc" v-if="DS.value === 'disabled'">Выберите дежурного сайта</p>
          <base-button @click="changeObject" style="margin-top: 20px"
             :disabled="(disabledNextBtn || DS.value === 'disabled')">Принять</base-button>
       </div>
@@ -209,7 +211,8 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {

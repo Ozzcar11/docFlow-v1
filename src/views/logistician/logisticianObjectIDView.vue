@@ -51,7 +51,10 @@
             style="margin-top: 10px">
             <template #action="{ item }">
                <div v-if="dynamicMaxValue(item) == 0" style="color: red;">Отсутствуют на складе</div>
-               <el-input-number v-else :min="0" :max="dynamicMaxValue(item)" size="small" @change="handleChange" />
+               <div else style="display: flex; align-items: center;">
+                  <el-input-number :min="0" :max="dynamicMaxValue(item)" size="small" @change="handleChange" />
+                  <div style="margin-left: 10px;"><b>{{ dynamicMaxValue(item)+ ' макс' }}</b></div>
+               </div>
             </template>
             <template #delele="{ item }">
                <BaseButton @click="deleteObjFromSearcTable(item)" theme="danger">Удалить</BaseButton>
@@ -258,7 +261,8 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {

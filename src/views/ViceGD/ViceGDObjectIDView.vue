@@ -42,7 +42,9 @@
             :options="engineer.data">
             Инженеры</base-select>
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
+         <br>
+         <p class="button__container-desc" v-if="cancel && contractor.value === 'disabled'">Выберите агента/подрядчика для продолжения</p>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="(disabledNextBtn || contractor.value === 'disabled' && cancel)">Принять</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -232,14 +234,13 @@ export default {
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
          const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
-
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
          if (resP.data.length === 2 && this.lastLVL == 'ГД') this.cancel = true
       },
       async changeObject() {
          try {
-            if (this.fileDraft) {
-               await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileDraft))
+            if (this.fileScheme) {
+               await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileScheme))
             }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
@@ -283,7 +284,7 @@ export default {
             await ObjectAPI.nextObject(this.objectID, JSON.stringify({
                action: 'up',
                lvl: 'lvl9',
-               choice1: this.contractor.value,
+               choice1: [+this.contractor.value],
                choice2: false
             }))
             alert('Объект успешно принят')

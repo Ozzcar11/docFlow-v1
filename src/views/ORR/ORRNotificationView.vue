@@ -31,22 +31,18 @@ export default {
       return {
          tableHeadline: [
             {
-               key: 'id',
-               text: 'ID'
+               key: 'date',
+               text: 'Дата'
             },
             {
-               key: 'name',
-               text: 'Название'
-            },
-            {
-               key: 'comment',
+               key: 'text',
                text: 'Комментарий'
             },
-            {
-               key: 'action',
-               text: 'Действие',
-               slot: true
-            }
+            // {
+            //    key: 'action',
+            //    text: 'Действие',
+            //    slot: true
+            // }
          ],
          tableRows: []
       }

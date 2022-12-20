@@ -42,9 +42,11 @@
             Инженеры</base-select>
          <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
          <br>
-         <p class="button__container-desc" v-if="!cancelObj">Выберите инженера</p>
+         <p class="button__container-desc" v-if="(fileDraft == null && cancelObj)">Добавьте обязательный файл для принятия</p>
+         <br>
+         <p class="button__container-desc" v-if="disabledNextBtn.engineer">Выберите инженера</p>
          <base-button @click="changeObject" style="margin-top: 20px"
-            :disabled="(disabledNextBtn.comment || disabledNextBtn.engineer || fileDraft == null)">Принять</base-button>
+            :disabled="(disabledNextBtn.comment || disabledNextBtn.engineer || fileDraft == null && cancelObj)">Принять</base-button>
          <base-button v-if="cancelObj" :disabled="disabledNextBtn.comment" @click="cancelObject" style="margin-top: 20px" theme="danger">Отказ</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
@@ -204,9 +206,9 @@ export default {
          }
       },
       async fetchFiles() {
-         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resP.data, ...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async fetchLogs() {
          const res = await ObjectAPI.requestLogs(this.$route.params.id)
@@ -221,6 +223,7 @@ export default {
       },
       async fetchEnginer() {
          const res = await UsersAPI.profileUser('ИнженерПКО')
+         console.log(res.data);
          const data = res.data
          for (let item of data)
             this.engineer.data.push({
@@ -249,7 +252,7 @@ export default {
                choice1: false,
                choice2: false
             }))
-            alert('Объект отклонён')
+            alert('Объект принят')
             this.$router.push('/PKO/')
             return
          } else {

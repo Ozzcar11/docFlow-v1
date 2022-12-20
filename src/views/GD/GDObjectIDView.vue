@@ -38,13 +38,14 @@
          <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn.comment">
             Принять</base-button>
-         <base-button v-if="!cancelObj" @click="cancelObject" theme="danger" :disabled="disabledNextBtn.comment"
+         <base-button v-if="cancelObj" @click="cancelObject" theme="danger" :disabled="disabledNextBtn.comment"
             style="margin-top: 20px">Отказ
          </base-button>
       </div>
       <div v-else class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
-         <base-button @click="completeObject" style="margin-top: 20px">Принять</base-button>
+         <base-button @click="completeObject" style="margin-top: 20px"
+            :disabled="disabledNextBtn.comment">Завершить</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -125,7 +126,6 @@ export default {
          represent: null,
          potential: null,
          competition: null,
-         fileDraft: null,
          fileScheme: null,
          objectID: this.$route.params.id,
          lastLVL: null,
@@ -233,9 +233,8 @@ export default {
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
          this.lastLVL = data.last_lvl
-         if (this.lastLVL == 'Зам.ГД.развитию') {
+         if (this.lastLVL == 'Бухгалтер') {
             this.cancelObj = false
-         } else if (this.lastLVL == 'Бухгалтер') {
             this.complete = true
          }
       },
@@ -252,24 +251,21 @@ export default {
          }
       },
       async fetchFiles() {
-         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resP.data, ...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {
             if (this.fileScheme) {
                await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileScheme))
             }
-            if (this.fileScheme) {
-               await FilesAPI.sendPriorityFileObject(this.objectID, createFormData(this.fileDraft))
-            }
          } catch (e) {
             alert('Что-то пошло не так! Попробуйте позже')
             this.$router.push('/GD/')
             return
          }
-         if (!this.cancelObj) {
+         if (this.lastLVL === 'Зам.ГД.развитию') {
             await ObjectAPI.nextObject(this.objectID, JSON.stringify({
                action: 'up',
                lvl: 'lvl8',

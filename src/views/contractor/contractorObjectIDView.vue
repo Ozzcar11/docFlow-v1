@@ -38,6 +38,7 @@
          <div class="button__container">
             <p class="button__container-desc" v-if="disabledNextBtn.comments">Оставьте
                комментрий для продолжения</p>
+            <br>
             <p class="button__container-desc" v-if="(disabledNextBtn.check && disabled)">Выберите все материалы для
                продолжения</p>
             <base-button v-if="disabled" @click="changeObject" style="margin-top: 20px"
@@ -46,7 +47,7 @@
                :disabled="disabledNextBtn.comments">Принять</base-button>
          </div>
       </div>
-      <div v-if="!disabled" class="calc">
+      <div v-if="disabled" class="calc">
          <AppTable v-if="search.tableRows.length" :tableHeadline="search.tableHeadline" :tableRows="search.tableRows"
             style="margin-top: 10px">
             <template #check="{ item }">
@@ -120,6 +121,7 @@ export default {
             text: null,
             type: 'user'
          },
+         lastLvl: '',
          representsSelect: [],
          mapAddress: [],
          name: null,
@@ -211,12 +213,11 @@ export default {
       },
       async fetchMaterials() {
          const res = await ObjectAPI.getMaterialsObject(this.objectID)
-         console.log(res.data);
          for (let item in res.data) {
             this.search.tableRows.push({
                id: res.data[item].material_name_1S,
                value: res.data[item].count_material_1S,
-               ckeck: false
+               check: false
             })
          }
          if (res.data.length === 0) this.disabledNextBtn.check = false
@@ -232,8 +233,8 @@ export default {
          this.period = data.period
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
-
-         if (data.last_lvl == 'Логист') this.disabled == true
+         this.lastLvl = data.last_lvl
+         if (this.lastLvl == 'Логист') this.disabled = true
       },
       async fetchComments() {
          const res = await ObjectAPI.requestComments(this.objectID)
@@ -249,7 +250,8 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {
@@ -268,10 +270,17 @@ export default {
                choice1: false,
                choice2: false
             }))
-         } else {
+         } else if (this.lastLvl === 'Зам.ГД.развитию') {
             await ObjectAPI.nextObject(this.objectID, JSON.stringify({
                action: 'up',
                lvl: 'lvl10',
+               choice1: false,
+               choice2: false
+            }))
+         } else {
+            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
+               action: 'up',
+               lvl: 'lvl5',
                choice1: false,
                choice2: false
             }))

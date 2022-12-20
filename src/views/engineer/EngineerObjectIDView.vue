@@ -40,7 +40,7 @@
          <br>
          <base-select v-model="lawyer.value" @change="disableSelectHandler1()" :options="lawyer.data">
             Агент/Подрядчик</base-select>
-         <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения и выберите
+         <p class="button__container-desc" v-if="(disabledNextBtn.comment || disabledNextBtn.engineer || disabledNextBtn.engineer1)">Оставьте комментрий для продолжения и выберите
             агента или юриста</p>
          <base-button @click="changeObject" style="margin-top: 20px"
             :disabled="disabledNextBtn.comment || disabledNextBtn.engineer || disabledNextBtn.engineer1">Принять
@@ -220,7 +220,8 @@ export default {
       },
       async fetchFiles() {
          const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data]
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async fetchEnginer() {
          const reLawier = await UsersAPI.profileUser('Агент/Подрядчик')

@@ -23,19 +23,20 @@
       <div class="create__container">
          <h4 class="create__headline">Гарантия</h4>
          <div class="create__subcontainer">
-            <base-input v-model="period">Срок</base-input>
-            <base-input v-model="subscribers">Количество абонентов</base-input>
-            <base-select v-model="represent" :options="representsSelect">Представитель</base-select>
+            <base-input v-model="period" disabled>Срок</base-input>
+            <base-input v-model="subscribers" disabled>Количество абонентов</base-input>
+            <base-select v-model="represent" disabled :options="representsSelect">Представитель</base-select>
          </div>
       </div>
       <div class="create__container">
          <h4 class="create__headline">Потенциал</h4>
          <div class="create__subcontainer">
-            <base-input v-model="potential">Потенциал абон. базы</base-input>
-            <base-input v-model="competition">Конкуренция</base-input>
+            <base-input v-model="potential" disabled>Потенциал абон. базы</base-input>
+            <base-input v-model="competition" disabled>Конкуренция</base-input>
          </div>
       </div>
-      <base-button @click="changeObject" style="margin-top: 20px">Сохранить</base-button>
+      <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Сохранить</base-button>
+      <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="cancelObject" style="margin-top: 20px" :disabled="disabledNextBtn">Отказать</base-button>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
          :tableHeadline="logsTable.tableHeadline" />
@@ -71,6 +72,7 @@ export default {
    },
    data() {
       return {
+         disabledNextBtn: true,
          comments: {
             tableHeadline: [
                {
@@ -111,6 +113,7 @@ export default {
          fileDraft: null,
          fileScheme: null,
          objectID: null,
+         lastLVL: null,
          fileTable: {
             tableHeadline: [
                {
@@ -145,7 +148,6 @@ export default {
       this.fetchRepresents()
       this.fetchObject()
       this.fetchComments()
-      this.fetchFiles()
       this.fetchLogs()
    },
    methods: {
@@ -178,9 +180,12 @@ export default {
          this.potential = data.potential
          this.subscribers = data.number_subscribers
          this.period = data.period
+         this.lastLVL = data.last_lvl
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
          this.represent = this.representsSelect.find(item => item.text == data.representative).value
+
+         this.fetchFiles()
 
          if (data.lvl.find(item => item === 'Финансовый Директор')) this.isFinDir = true
       },
@@ -197,30 +202,36 @@ export default {
          }
       },
       async fetchFiles() {
-         const resP = await FilesAPI.getPriorityFilesObject(this.$route.params.id)
-         const resR = await FilesAPI.getRegularFilesObject(this.$route.params.id)
-         this.fileTable.tableRows = [...resP.data, ...resR.data]
+         const resR = await FilesAPI.getRegularFilesObject(this.objectID)
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async changeObject() {
          try {
-            await ObjectAPI.editObject(this.objectID, JSON.stringify({
-               name: this.name,
-               address: this.mapAddress[0],
-               coordinates: this.mapAddress[1].join(', '),
-               period: this.period,
-               number_subscribers: this.subscribers,
-               potential: this.potential,
-               competition: this.competition,
-               representative: this.represent
+            await ObjectAPI.nextObject(this.objectID, JSON.stringify({
+               action: 'up',
+               lvl: 'lvl0',
+               choice1: false,
+               choice2: false
             }))
-            await FilesAPI.sendRegularFileObject(this.$route.params.id, createFormData(this.fileScheme))
-            await FilesAPI.sendPriorityFileObject(this.$route.params.id, createFormData(this.fileDraft))
+            await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileScheme))
+            await FilesAPI.sendPriorityFileObject(this.objectID, createFormData(this.fileDraft))
          } catch (e) {
             this.$router.push('/fin-dir/')
             alert('Что-то пошло не так! Попробуйте позже')
             return
          }
          alert('Объект успешно изменён')
+         this.$router.push('/fin-dir/')
+      },
+      async cancelObject() {
+         await ObjectAPI.nextObject(this.objectID, JSON.stringify({
+            action: 'down',
+            lvl: 'lvl99',
+            choice1: false,
+            choice2: false
+         }))
+         alert('Объект отменён')
          this.$router.push('/fin-dir/')
       },
       async addComment() {
@@ -231,6 +242,7 @@ export default {
                who: this.comments.type
             })
          )
+         this.disabledNextBtn = false
          this.fetchComments()
       },
       filePath(id) {

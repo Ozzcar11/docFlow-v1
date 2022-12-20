@@ -19,7 +19,7 @@
          <slot />
       </div>
       <!-- <div v-if="$store.getters.getUserRoute === 'admin'" class="aside__admin admin"> -->
-         <div v-if="false" class="aside__admin admin"> 
+      <div v-if="false" class="aside__admin admin">
          <nav>
             <app-menu :menuList="adminMenuList" @clickAdmin="asideMenuHandler" pad />
          </nav>
@@ -43,13 +43,14 @@ export default {
    },
    created() {
       this.asideMenuHandler(`/${this.$store.getters.getUserRoute}/`)
-
+      console.log('unmounted');
       const socket = webSocket('notification')
 
       socket.onmessage = (e) => {
+         console.log(e);
          const res = JSON.parse(e.data)
          if (res.roles.includes(+
-         this.$store.getters.getUserRole)) {
+            this.$store.getters.getUserRole)) {
             ElNotification({
                ...res,
                type: res.notifType,

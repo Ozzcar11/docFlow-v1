@@ -24,7 +24,7 @@
             <base-input v-model="objCard.competition">Конкуренция</base-input>
          </div>
       </div>
-      <base-button @click="createObject" :disabled="(objCard.fileDraft === null || validation)"
+      <base-button @click="createObject" :disabled="(validation)"
          style="margin-top: 20px">Добавить</base-button>
    </div>
 </template>
@@ -63,7 +63,7 @@ export default {
             represent: 1,
             potential: null,
             competition: null,
-            fileScheme: null,
+            fileScheme: undefined,
             fileDraft: null,
          }
       }
@@ -116,7 +116,6 @@ export default {
                arr.push(item)
             }
          }
-         console.log(!!arr.length);
          return !!arr.length
       }
    }
