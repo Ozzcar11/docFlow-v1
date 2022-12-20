@@ -190,7 +190,7 @@ export default {
          console.log(this.lastLvl);
       },
       async fetchDS() {
-         const res = await UsersAPI.profileUser('Инженер СТЭОиС')
+         const res = await UsersAPI.profileUser('Инженер СЭТОиС')
          const data = res.data
          console.log(data);
          for (let item of data) {

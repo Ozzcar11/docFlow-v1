@@ -37,23 +37,27 @@
          </div>
          <div class="button__container">
             <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
+            <br>
+            <p class="button__container-desc" v-if="!search.tableRows.length">Выберите материалы</p>
             <base-button @click="changeObject" style="margin-top: 20px"
-               :disabled="disabledNextBtn">Принять</base-button>
+               :disabled="disabledNextBtn || !search.tableRows.length">Принять</base-button>
          </div>
       </div>
       <div class="calc">
          <div class="calc__search">
             <el-autocomplete class="calc__search-self" v-model="state" :fetch-suggestions="querySearchAsync"
                placeholder="Выберите объект" @select="handleSelect" />
-            <BaseButton @click="addToTable" class="calc__button">Добавить</BaseButton>
+            <BaseButton @click="addToTable" class="calc__button">Добавить
+            </BaseButton>
          </div>
          <AppTable v-if="search.tableRows.length" :tableHeadline="search.tableHeadline" :tableRows="search.tableRows"
             style="margin-top: 10px">
             <template #action="{ item }">
                <div v-if="dynamicMaxValue(item) == 0" style="color: red;">Отсутствуют на складе</div>
-               <div else style="display: flex; align-items: center;">
-                  <el-input-number :min="0" :max="dynamicMaxValue(item)" size="small" @change="handleChange" />
-                  <div style="margin-left: 10px;"><b>{{ dynamicMaxValue(item)+ ' макс' }}</b></div>
+               <div v-else style="display: flex; align-items: center;">
+                  <el-input-number v-model="search.countValues[item]" :min="0" :max="dynamicMaxValue(item)" size="small"
+                     @change="handleChange" />
+                  <div style="margin-left: 10px;"><b>{{ dynamicMaxValue(item) + ' макс' }}</b></div>
                </div>
             </template>
             <template #delele="{ item }">
@@ -179,6 +183,7 @@ export default {
                },
             ],
             tableRows: [],
+            countValues: [],
          },
          state: '',
          selectedItem: null,
@@ -283,12 +288,22 @@ export default {
 
          for (let item of this.search.tableRows) {
             if (item.value !== 0) {
-               await ObjectAPI.materialsObject(JSON.stringify({
-                  material_name_1S: item.name,
-                  material_id_1S: item.id,
-                  count_material_1S: item.value,
-                  link_object: this.objectID
-               }))
+               let res = []
+               for (let count in this.search.countValues) {
+                  if (count === item.id) {
+                     res.push({
+                        ...item,
+                        count: this.search.countValues[count]
+                     })
+                  }
+               }
+               for (let resItem of res)
+                  await ObjectAPI.materialsObject(JSON.stringify({
+                     material_name_1S: resItem.name,
+                     material_id_1S: resItem.id,
+                     count_material_1S: resItem.count,
+                     link_object: this.objectID
+                  }))
             }
          }
          ObjectAPI.checkObject(this.objectID)

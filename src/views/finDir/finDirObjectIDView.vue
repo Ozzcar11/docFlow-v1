@@ -149,6 +149,7 @@ export default {
       this.fetchObject()
       this.fetchComments()
       this.fetchLogs()
+      this.fetchFiles()
    },
    methods: {
       async fetchRepresents() {
@@ -159,6 +160,11 @@ export default {
                text: item.full_name
             })
          }
+      },
+      async fetchFiles() {
+         const resR = await FilesAPI.getRegularFilesObject(this.objectID)
+         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
+         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async fetchLogs() {
          const res = await ObjectAPI.requestLogs(this.$route.params.id)
