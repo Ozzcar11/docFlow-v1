@@ -3,7 +3,7 @@
       <div v-if="$slots.default" class="file__slot">
          <slot />
       </div>
-      <a class="file__self" :href="'media/' + path" download>Скачать</a>
+      <a class="file__self" :href="'/media/' + path" download>Скачать</a>
    </div>
 </template>
 
