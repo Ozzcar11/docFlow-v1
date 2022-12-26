@@ -188,7 +188,7 @@ export default {
          }
       },
       async fetchEngineer() {
-         const res = await UsersAPI.profileUser('Инженер СТЭОиС')
+         const res = await UsersAPI.profileUser('Инженер СЭТОиС')
          const data = res.data
          for (let item of data) {
             this.engineer.data.push({

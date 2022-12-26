@@ -45,7 +45,7 @@
 import BaseInput from '@/components/Base/BaseInput.vue'
 import BaseButton from '@/components/Base/BaseButton.vue'
 
-import { AuthAPI } from '@/api/auth'
+// import { AuthAPI } from '@/api/auth'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -84,7 +84,12 @@ export default {
                this.$router.push(`/${this.$store.getters.getUserRoute}`)
             }
          } catch (e) {
-            alert('Проверьте правильность введённых данных')
+            console.log(e);
+            if (e.response.status == 500) {
+               alert('Проверьте правильность введённых данных')
+            } else {
+               alert('Сервер сейчас не доступен. Попробуйте позже')
+            }
          }
       },
 

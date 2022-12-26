@@ -36,7 +36,7 @@
       </div>
       <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
-         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
+         <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Завершить</base-button>
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -232,7 +232,7 @@ export default {
             text: `ПТО завершил строительство ${this.name}`,
             users: [21, 27, 5]
          }))
-         alert('Объект успешно принят')
+         alert('Объект успешно завершён')
          this.$router.push('/PTO/')
       },
       async addComment() {

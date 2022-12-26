@@ -34,10 +34,10 @@
             <base-input v-model="competition" disabled>Конкуренция</base-input>
          </div>
       </div>
-      <div class="button__container">
+      <!-- <div class="button__container">
          <p class="button__container-desc" v-if="disabledNextBtn">Оставьте комментрий для продолжения</p>
          <base-button @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Принять</base-button>
-      </div>
+      </div> -->
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
          :tableHeadline="logsTable.tableHeadline" />

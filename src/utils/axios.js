@@ -32,7 +32,7 @@ DefaultAPIInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
     console.log(error)
-    if (error.code === 401 && !originalRequest._retry) {
+    if (error.code === 401) {
       const res = await AuthAPI.refreshToken()
       originalRequest._retry = true
       store.commit('refreshToken', res.data.access)

@@ -35,8 +35,13 @@
             <base-input v-model="competition" disabled>Конкуренция</base-input>
          </div>
       </div>
-      <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="changeObject" style="margin-top: 20px" :disabled="disabledNextBtn">Сохранить</base-button>
-      <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="cancelObject" style="margin-top: 20px" :disabled="disabledNextBtn">Отказать</base-button>
+      <div style="display: flex;
+      flex-direction: column; width: 40%;">
+         <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="changeObject" style="margin-top: 20px"
+            :disabled="disabledNextBtn">Сохранить</base-button>
+         <base-button v-if="this.lastLVL === 'НачальникПКО'" @click="cancelObject" style="margin-top: 20px"
+            theme="danger" :disabled="disabledNextBtn">Отказать</base-button>
+      </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
          :tableHeadline="logsTable.tableHeadline" />
@@ -149,7 +154,6 @@ export default {
       this.fetchObject()
       this.fetchComments()
       this.fetchLogs()
-      this.fetchFiles()
    },
    methods: {
       async fetchRepresents() {
@@ -160,11 +164,6 @@ export default {
                text: item.full_name
             })
          }
-      },
-      async fetchFiles() {
-         const resR = await FilesAPI.getRegularFilesObject(this.objectID)
-         const resP = await FilesAPI.getPriorityFilesObject(this.objectID)
-         this.fileTable.tableRows = [...resR.data, ...resP.data]
       },
       async fetchLogs() {
          const res = await ObjectAPI.requestLogs(this.$route.params.id)
@@ -190,7 +189,6 @@ export default {
          this.mapAddress.push(data.address)
          this.mapAddress.push(data.coordinates.split(', '))
          this.represent = this.representsSelect.find(item => item.text == data.representative).value
-
          this.fetchFiles()
 
          if (data.lvl.find(item => item === 'Финансовый Директор')) this.isFinDir = true
@@ -220,8 +218,12 @@ export default {
                choice1: false,
                choice2: false
             }))
-            await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileScheme))
-            await FilesAPI.sendPriorityFileObject(this.objectID, createFormData(this.fileDraft))
+            if (this.fileScheme) {
+               await FilesAPI.sendRegularFileObject(this.objectID, createFormData(this.fileScheme))
+            }
+            if (this.fileDraft) {
+               await FilesAPI.sendPriorityFileObject(this.objectID, createFormData(this.fileDraft))
+            }
          } catch (e) {
             this.$router.push('/fin-dir/')
             alert('Что-то пошло не так! Попробуйте позже')

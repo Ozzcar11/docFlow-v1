@@ -43,9 +43,9 @@
          </base-button>
       </div>
       <div v-else class="button__container">
-         <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
+         <!-- <p class="button__container-desc" v-if="disabledNextBtn.comment">Оставьте комментрий для продолжения</p>
          <base-button @click="completeObject" style="margin-top: 20px"
-            :disabled="disabledNextBtn.comment">Завершить</base-button>
+            :disabled="disabledNextBtn.comment">Завершить</base-button> -->
       </div>
       <h4 class="create__headline">Логи</h4>
       <AppTable v-if="logsTable.tableRows.length" :tableRows="logsTable.tableRows"
@@ -221,6 +221,7 @@ export default {
          alert('Объект завершён')
          this.$router.push('/GD/')
       },
+
       async fetchObject() {
          const res = await ObjectAPI.requestObject(this.objectID)
          const data = res.data
@@ -280,7 +281,8 @@ export default {
             }))
             NotificationAPI.createNotification(JSON.stringify({
                text: `Генеральный директор принял ${this.name} объект`,
-               users: [26, 27, 28]
+               users: [26, 27, 28],
+               ob: this.objectID
             }))
          } else {
             await ObjectAPI.nextObject(this.objectID, JSON.stringify({
@@ -297,7 +299,8 @@ export default {
             }))
             NotificationAPI.createNotification(JSON.stringify({
                text: `Генеральный директор принял решение о необходимости проектирования ${this.name}`,
-               users: [27]
+               users: [27],
+               ob: this.objectID
             }))
          }
          this.$router.push('/GD/')
