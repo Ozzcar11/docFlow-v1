@@ -24,8 +24,7 @@
             <base-input v-model="objCard.competition">Конкуренция</base-input>
          </div>
       </div>
-      <base-button @click="createObject" :disabled="(validation)"
-         style="margin-top: 20px">Добавить</base-button>
+      <base-button @click="createObject" :disabled="(validation)" style="margin-top: 20px">Добавить</base-button>
    </div>
 </template>
 
@@ -60,7 +59,7 @@ export default {
             name: null,
             period: null,
             subscribers: null,
-            represent: 1,
+            represent: null,
             potential: null,
             competition: null,
             fileScheme: undefined,
@@ -74,7 +73,9 @@ export default {
    methods: {
       async fetchRepresents() {
          const res = await RepresentAPI.requestRepresents()
-         for (let item of res.data) {
+         const data = res.data
+         this.objCard.represent = data?.[0].id
+         for (let item of data) {
             this.objCard.representsSelect.push({
                value: item.id,
                text: item.full_name
@@ -100,10 +101,12 @@ export default {
                })
             )
             await FilesAPI.sendPriorityFileObject(resObject.data.id, createFormData(this.objCard.fileDraft))
+            if (this.objCard.fileScheme)
             FilesAPI.sendRegularFileObject(resObject.data.id, createFormData(this.objCard.fileScheme))
             alert('Объект успешно создан')
             this.$router.push('/fin-dir/')
          } catch (e) {
+            console.log(e);
             alert(e.response?.data?.message)
          }
       }

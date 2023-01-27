@@ -2,7 +2,7 @@ import { DefaultAPIInstance } from '../utils/axios'
 
 export const UsersAPI = {
   createUser(body) {
-    return DefaultAPIInstance.post('/create_user/', body)
+    return DefaultAPIInstance.post('/create_user_v2/', body)
   },
   changeUser(id, body) {
     return DefaultAPIInstance.put(`/detail_user/${id}/`, body)
